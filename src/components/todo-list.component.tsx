@@ -97,7 +97,7 @@ export const TodoList: React.FC<TodoListProps> = ({ onSelectTodo }) => {
       </p>
       <div className="filter-buttons">
         <button
-          data-testid="filter-All"
+          data-testid="filter-all"
           className={filter === 'All' ? 'active' : ''}
           onClick={() => setFilter('All')}
         >
@@ -105,7 +105,7 @@ export const TodoList: React.FC<TodoListProps> = ({ onSelectTodo }) => {
         </button>
 
         <button
-          data-testid="filter-Open"
+          data-testid="filter-open"
           className={filter === 'Open' ? 'active' : ''}
           onClick={() => setFilter('Open')}
         >
@@ -113,7 +113,7 @@ export const TodoList: React.FC<TodoListProps> = ({ onSelectTodo }) => {
         </button>
 
         <button
-          data-testid="filter-Completed"
+          data-testid="filter-completed"
           className={filter === 'Completed' ? 'active' : ''}
           onClick={() => setFilter('Completed')}
         >
@@ -121,8 +121,8 @@ export const TodoList: React.FC<TodoListProps> = ({ onSelectTodo }) => {
         </button>
       </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
+      {loading && <p>Loading todos...</p>}
+      {error && <p className="error">Error loading todos: {error}</p>}
 
       <ul data-testid="todo-list">
         {filteredTodos.map((todo) => (
