@@ -13,50 +13,47 @@ interface TodoDetailProps {
  * @param todoId - The ID of the todo item to fetch and display.
  */
 export const TodoDetail: React.FC<TodoDetailProps> = ({ todoId }) => {
-  const [todo, setTodo] = useState<Todo | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [todo, setTodo] = useState<Todo | null>(null); // set to null initially
+  const [error, setError] = useState<string | null>(null); // to handle error cuz you can't throw error directly in the fetch?
 
   useEffect(() => {
-    const fetchTodo = async () => {
-      setLoading(true);
-      setError(null);
-      setTodo(null);
+    const getDetails = async () => {
       try {
-        const response = await fetch(
-          `https://jsonplaceholder.typicode.com/todos/${todoId}`,
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todoId}`);
+        if (res.ok) {
+          const details: Todo = await res.json();
+          setTodo(details);
         }
-        const data: Todo = await response.json();
-        setTodo(data);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'Unknown error occurred');
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError('Failed: ' + err.message);
+        } else {
+          setError('Failed: Unknown error');
+        }
       }
     };
 
     if (todoId) {
-      fetchTodo();
+      getDetails();
     }
   }, [todoId]);
 
-  if (loading) return <p>Loading todo details...</p>;
-  if (error) return <p className="error">Error loading todo: {error}</p>;
-  if (!todo) return <p>No todo found.</p>;
+  if (error) {
+    return <p>error loading todo</p>;
+  }
+
+  if (!todo) {
+    return <p>error loading todo</p>;
+  }
 
   return (
-    <div>
-      <h2>Todo Details</h2>
-      <p>ID: {todo.id}</p>
-      <p>
-        <span>{todo.title}</span>
-      </p>
-      <p>Completed</p>
-      <p>Status: {todo.completed ? 'Yes' : 'No'}</p>
-      <p>User ID: {todo.userId}</p>
+    <div className="todo-detail">
+      <h1>{todo.title}</h1>
+      <h2>
+        Todo ID: {todo.id}, User ID: {todo.userId}
+      </h2>
+      <h3>Status: </h3>
+      <h3>{todo.completed ? 'Completed' : 'Not Complete'}</h3>
     </div>
   );
 };
